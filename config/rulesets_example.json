@@ -1,0 +1,36 @@
+[
+    {
+        "rule_set_name": "Restructure",
+        "fulltext_conditions": [
+            {
+                "condition": "\"restructure \": [\"wind up\", \"wind-up\"]"
+            }
+        ]
+    },
+    {
+        "rule_set_name": "Overseas Locations",
+        "fulltext_conditions": [
+            {
+                "condition": "\"Asia\": [\"Bali\", \"Tokyo\", \"Hong Kong\", \"Shanghai\", \"Manila\", \"Moscow\"]"
+            },
+            {
+                "condition": "\"Middle East\": [\"Israel\"]"
+            },
+            {
+                "condition": "\"North America\": [\"LA\", \"Dallas\", \"Phoenix\", \"New York\", \"Mexico\", \"Atlanta\", \"Canada\", \"US\"]"
+            },
+            {
+                "condition": "\"Europe\": [\"Barcelona\", \"London\", \"Sweden\", \"Norway\", \"Germany\", \"Denmark\", \"France\", \"Geneva\", \"Italy\", \"Netherlands\", \"Portugal\", \"Russia\", \"UK\", \"Ukraine\", \"Vienna\", \"Copenhagen\", \"Paris\", \"Switzerland\", \"Milan\", \"Amsterdam\", \"Kiev\", \"Malmo\", \"Stockholm\"]"
+            },
+            {
+                "condition": "\"Oceania\": [\"Fiji\"]"
+            },
+            {
+                "condition": "\"South America\": [\"Argentina\", \"Brazil\"]"
+            },
+            {
+                "condition": "\"Africa\": [\"South Africa\", \"Capetown\"]"
+            }
+        ]
+    }
+]
