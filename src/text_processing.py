@@ -2,6 +2,7 @@
 from flashtext import KeywordProcessor
 import json
 
+
 def load_rulesets(ruleset_path):
     with open(ruleset_path, 'r') as file:
         rulesets = json.load(file)

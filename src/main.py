@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 import json # for testing
 
 def main():
-    print("Current working directory: ", os.getcwd())
     current_dir = os.path.dirname(__file__)  # Gets the directory where the script is located
+    input_dir = os.path.join('data', 'input')
     output_csv_path = os.path.join('data', 'output', 'hits.csv')  # Correct path to the CSV
-    input_json_path = os.path.join('data', 'input', 'example.json')  # Correct path to the JSON
+    input_dir = os.path.join('data', 'input')
+    input_files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]  # Correct path to the JSON
 
     # Load environment variables from .env file
     load_dotenv()
@@ -33,24 +34,23 @@ def main():
 
         # FOR TESTING #
         # Process the local JSON file
-        with open(input_json_path, 'r', encoding='utf-8') as jsonfile:
-            content = json.load(jsonfile) #loads entire JSON content
-
-            # Extract just the 'text_content' key/value from the loaded JSON content
-            text_content = content['text_content']
-
-            # Pass text_content to process_text function
-            extracted_info = process_text(text_content, rulesets)
-            if extracted_info:
+        for file_name in input_files:
+            file_path = os.path.join(input_dir, file_name)
+            with open(file_path, 'r', encoding='utf-8') as jsonfile:
+                content = json.load(jsonfile)  # Assuming JSON format for simplicity
+                text_content = content['text_content']  # Adjust based on actual content structure
+                
+                # Process the text content
+                extracted_info = process_text(text_content, rulesets)
                 for match in extracted_info:
                     csvwriter.writerow([
-                    'example.json',
-                    match["rule_set_name"],
-                    match["condition"],
-                    match["start"],
-                    match["end"]
-            ])
-        print("Processed example.json successfully.")
+                        file_name,
+                        match["rule_set_name"],
+                        match["condition"],
+                        match["start"],
+                        match["end"]
+                    ])
+                print(f"Processed {file_name} successfully.")
         
         # Process each blob in the container
         #for blob in list_blobs_in_container(client, container_name):
