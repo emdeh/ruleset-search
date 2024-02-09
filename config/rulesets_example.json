@@ -1,18 +1,16 @@
 [
     {
-        "rule_set_name": "Restructure",
+        "rule_set_name": "Test phrase finding",
         "fulltext_conditions": [
-            {
-                "condition": "\"restructure \": [\"wind up\", \"wind-up\"]"
-            }
+            {"condition": "Likelihood Scales and Risk Level Matrix"}
         ]
     },
     {
         "rule_set_name": "Overseas Locations",
         "fulltext_conditions": [
-            {
-                "condition": "\"Asia\": [\"Bali\", \"Tokyo\"]"
-            }
+            {"condition": "Newcastle"},
+            {"condition": "Japan"},
+            {"condition": "Asia"}
         ]
     }
 ]
