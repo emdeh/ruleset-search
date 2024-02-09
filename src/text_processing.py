@@ -9,13 +9,32 @@ def load_rulesets(ruleset_path):
 
 def process_text(text, rulesets):
     keyword_processor = KeywordProcessor()
+    keyword_to_ruleset_map = {}
+
+    # Adjusted mapping to support multiple rule sets for the same condition
     for ruleset in rulesets:
+        rule_set_name = ruleset["rule_set_name"]
         for condition in ruleset["fulltext_conditions"]:
-            keyword_processor.add_keyword(condition["condition"])
-    
+            keyword = condition["condition"]
+            keyword_processor.add_keyword(keyword)
+            if keyword not in keyword_to_ruleset_map:
+                keyword_to_ruleset_map[keyword] = []
+            keyword_to_ruleset_map[keyword].append((rule_set_name, keyword))
+
     found_keywords = keyword_processor.extract_keywords(text, span_info=True)
-    # For simplicity, just return the found keywords for now
-    return found_keywords
+    results = []
+
+    # Handling matches where a condition may belong to multiple rule sets
+    for keyword, start, end in found_keywords:
+        for rule_set_name, condition in keyword_to_ruleset_map[keyword]:
+            results.append({
+                "rule_set_name": rule_set_name,
+                "condition": condition,
+                "start": start,
+                "end": end
+            })
+
+    return results
 
 # Example usage within this file, you'll actually call process_text from main.py
 if __name__ == "__main__":
