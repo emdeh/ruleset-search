@@ -28,7 +28,7 @@ def main():
     # Prepare the CSV file for output
     with open(app_settings.output_csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Surrounding context (Extracts the the sentences immediately before and after where the condition was triggered)', 'Path to File', 'Start', 'End'])
+        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Surrounding context (Extracts the the sentences immediately before and after where the condition was triggered)', 'Start', 'End', 'Path to File'])
 
         # FOR TESTING #
         # Process the local JSON file
@@ -41,12 +41,20 @@ def main():
                 
                 # Process the text content
                 extracted_info = process_text(text_content, rulesets)
+
                 for match in extracted_info:
+                    # Compile the surrounding context for the current match in a list.
+                    surrounding_context = [s for s in [match["prev_sentence"], match["sentence"], match["next_sentence"]] if s]
+
+                    # Concatenate the surrounding context and strip any leading/trailing whitespace
+                    surrounding_context_str = " ".join(surrounding_context).strip()
+
+                    # Write the match to the CSV file
                     csvwriter.writerow([
                         file_name,
                         match["rule_set_name"],
                         match["condition"],
-                        match["prev_sentence"] + " " + match["sentence"] + " " + match["next_sentence"],  # Concatenated context
+                        surrounding_context_str,  # Concatenated and stripped context
                         match["start"],
                         match["end"],
                         clickable_path
