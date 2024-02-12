@@ -53,12 +53,15 @@ def main():
                     ])
                 print(f"Processed {file_name} successfully.")'''
         
+        # Define the path prefix for the subfolder structure
+        path_prefix = app_settings.blob_path_prefix
+
         # Process each blob in the container
-        for blob in list_blobs(app_settings.blob_service_client, app_settings.blob_container_name):
+        for blob in list_blobs(app_settings.blob_service_client, app_settings.blob_container_name, path_prefix):
             blob_name = blob.name
             content = read_blob_content(app_settings.blob_service_client, app_settings.blob_container_name, blob_name)
 
-            text_content = content['text_content']
+            text_content = content.get('text_content', '')
 
             # Process the text content
             clickable_path = app_settings.original_path + blob_name

@@ -6,9 +6,9 @@ import json
 def get_blob_service_client(blob_account_url, blob_credential):
     return BlobServiceClient(account_url=blob_account_url, credential=blob_credential)
 
-def list_blobs(blob_service_client, blob_container_name):
+def list_blobs(blob_service_client, blob_container_name, path_prefix=''):
     container_client = blob_service_client.get_container_client(blob_container_name)
-    return container_client.list_blobs()
+    return container_client.list_blobs(name_starts_with=path_prefix)
 
 def read_blob_content(client, container_name, blob_name):
     try:
