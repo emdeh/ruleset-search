@@ -1,5 +1,5 @@
  # Define global settings here, such as Azure Storage connection strings (use environment variables for actual values to keep them secure).
-
+# Responsible for loading the environment variables from your .env file and making them available as Python variables in your application
 import os
 from dotenv import load_dotenv
 

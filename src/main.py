@@ -57,7 +57,7 @@ def main():
         for blob in list_blobs(app_settings.blob_service_client, app_settings.blob_container_name):
             blob_name = blob.name
             content = read_blob_content(app_settings.blob_service_client, app_settings.blob_container_name, blob_name)
-            content = json.load(blob_name)
+
             text_content = content['text_content']
 
             # Process the text content
