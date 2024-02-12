@@ -1,1 +1,0 @@
- # Define global settings here, such as Azure Storage connection strings (use environment variables for actual values to keep them secure).
