@@ -1,6 +1,23 @@
 # Description: This file contains the logic for processing text and extracting information based on rulesets.
 from flashtext import KeywordProcessor
 import json
+import os
+from dotenv import load_dotenv
+import os
+
+def write_file_manifest(input_dir, output_dir, manifest_file='manifest.txt'):
+    load_dotenv()
+    input_dir = os.getenv('INPUT_DIR')
+    output_dir = os.getenv('OUTPUT_DIR')
+    manifest_file = os.path.join(output_dir, 'manifest.txt')
+
+    with open(manifest_file, 'w') as file:
+        for filename in os.listdir(input_dir):
+            file.write(filename + '\n')
+
+# Example usage within main.py
+if __name__ == "__main__":
+    write_file_manifest()
 
 
 def load_rulesets(ruleset_path):

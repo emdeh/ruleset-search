@@ -1,25 +1,27 @@
 # Description: This script demonstrates how to process text from Azure Blob Storage and write the results to a CSV file.
 # from azure_blob_utils import get_blob_service_client, list_blobs_in_container, read_blob_content
-from text_processing import process_text, load_rulesets
+from text_processing import write_file_manifest, process_text, load_rulesets
 import csv
 import os
 from dotenv import load_dotenv
+import os
 import json # for testing
 
 def main():
-    current_dir = os.path.dirname(__file__)  # Gets the directory where the script is located
-    input_dir = os.path.join('data', 'input')
-    output_csv_path = os.path.join('data', 'output', 'hits.csv')  # Correct path to the CSV
-    input_dir = os.path.join('data', 'input')
-    input_files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]  # Correct path to the JSON
-
     # Load environment variables from .env file
     load_dotenv()
+    ruleset_path = os.getenv('RULESET_PATH')
+    input_dir = os.getenv('INPUT_DIR')
+    output_dir = os.getenv('OUTPUT_DIR')
+    output_csv_path = os.getenv('OUTPUT_CSV_PATH')
+    input_files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]  
 
     # Load configuration settings, such as Azure connection strings and container name
-    #connection_string = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-    #container_name = os.getenv('AZURE_STORAGE_CONTAINER_NAME')
-    ruleset_path = os.getenv('RULESET_PATH')
+    # connection_string = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+    # container_name = os.getenv('AZURE_STORAGE_CONTAINER_NAME')
+
+    # Create manifest of input files
+    write_file_manifest(input_dir, output_dir)
 
     # Initialize the Azure Blob Service Client
     #client = get_blob_service_client(connection_string)
