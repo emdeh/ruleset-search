@@ -4,6 +4,7 @@ import json
 import os
 from dotenv import load_dotenv
 import os
+import nltk
 
 def write_file_manifest(input_dir, output_dir, manifest_file='manifest.txt'):
     load_dotenv()
@@ -40,16 +41,34 @@ def process_text(text, rulesets):
             keyword_to_ruleset_map[keyword].append((rule_set_name, keyword))
 
     found_keywords = keyword_processor.extract_keywords(text, span_info=True)
+
+    # Tokenize the text into sentences
+    sentences = nltk.sent_tokenize(text)
+    sentence_starts = [text.find(sentence) for sentence in sentences]
+    
     results = []
 
     # Handling matches where a condition may belong to multiple rule sets
     for keyword, start, end in found_keywords:
+
+        # Find the sentence that contains the keyword
+        # Find the sentence that contains the keyword
+        sentence_index = next((i for i, s_start in enumerate(sentence_starts) if s_start > start), len(sentences)) - 1
+        # Ensure the sentence_index is not less than 0 after adjustment
+        sentence_index = max(sentence_index, 0)
+        sentence = sentences[sentence_index]
+        prev_sentence = sentences[sentence_index - 1] if sentence_index - 1 >= 0 else ""
+        next_sentence = sentences[sentence_index + 1] if sentence_index + 1 < len(sentences) else ""
+    
         for rule_set_name, condition in keyword_to_ruleset_map[keyword]:
             results.append({
                 "rule_set_name": rule_set_name,
                 "condition": condition,
                 "start": start,
-                "end": end
+                "end": end,
+                "sentence": sentence,
+                "prev_sentence": prev_sentence,
+                "next_sentence": next_sentence
             })
 
     return results

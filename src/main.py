@@ -28,7 +28,7 @@ def main():
     # Prepare the CSV file for output
     with open(app_settings.output_csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Path to File' 'Start', 'End'])
+        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Surrounding context (Extracts the the sentences immediately before and after where the condition was triggered)', 'Path to File', 'Start', 'End'])
 
         # FOR TESTING #
         # Process the local JSON file
@@ -46,9 +46,10 @@ def main():
                         file_name,
                         match["rule_set_name"],
                         match["condition"],
-                        clickable_path,
+                        match["prev_sentence"] + " " + match["sentence"] + " " + match["next_sentence"],  # Concatenated context
                         match["start"],
-                        match["end"]
+                        match["end"],
+                        clickable_path
                     ])
                 print(f"Processed {file_name} successfully.")
         
