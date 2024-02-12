@@ -28,12 +28,13 @@ def main():
     # Prepare the CSV file for output
     with open(app_settings.output_csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Start', 'End'])
+        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Path to File' 'Start', 'End'])
 
         # FOR TESTING #
         # Process the local JSON file
         for file_name in app_settings.input_files:
             file_path = os.path.join(app_settings.input_dir, file_name)
+            clickable_path = app_settings.original_path + file_name
             with open(file_path, 'r', encoding='utf-8') as jsonfile:
                 content = json.load(jsonfile)  # Assuming JSON format for simplicity
                 text_content = content['text_content']  # Adjust based on actual content structure
@@ -45,6 +46,7 @@ def main():
                         file_name,
                         match["rule_set_name"],
                         match["condition"],
+                        clickable_path,
                         match["start"],
                         match["end"]
                     ])
