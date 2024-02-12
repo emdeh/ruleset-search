@@ -1,13 +1,14 @@
 # Description: This script demonstrates how to process text from Azure Blob Storage and write the results to a CSV file.
-# from azure_blob_utils import get_blob_service_client, list_blobs_in_container, read_blob_content
 import sys
 import os
 from text_processing import write_file_manifest, process_text, load_rulesets
+# from azure_blob_utils import get_blob_service_client, list_blobs_in_container, read_blob_content
 import csv
 import json # for testing
 
 # Calculate the absolute path to the project root
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
 # Add the project root to the system path
 sys.path.insert(0, project_root)
 
