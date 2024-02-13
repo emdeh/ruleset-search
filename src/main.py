@@ -22,8 +22,12 @@ def main():
     blob_service_client = get_blob_service_client(app_settings.blob_account_url, app_settings.blob_credential)
     print(f"Successfully connected to the Azure Blob Storage account: {app_settings.blob_account_url} with service client: {blob_service_client}")
 
+    # Define the path prefix for the subfolder structure
+    path_prefix = app_settings.blob_path_prefix
+    print(f"Processing blobs in the container with path prefix: {path_prefix}")
+
     # Create manifest of input files
-    write_file_manifest(blob_service_client, app_settings.blob_container_name, app_settings.output_dir, 'manifest.txt')
+    write_file_manifest(blob_service_client, app_settings.blob_container_name, path_prefix, app_settings.output_dir, 'manifest.txt')
 
     # Load the rulesets from a JSON file
     rulesets = load_rulesets(app_settings.ruleset_path)   
@@ -33,9 +37,7 @@ def main():
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Surrounding context (Extracts the the sentences immediately before and after where the condition was triggered)', 'Start', 'End', 'Path to File'])
 
-        # Define the path prefix for the subfolder structure
-        path_prefix = app_settings.blob_path_prefix
-        print(f"Processing blobs in the container with path prefix: {path_prefix}")
+        
 
         # Process each blob in the container
         print(f"Listing blobs in container: {app_settings.blob_container_name}")

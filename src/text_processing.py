@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import nltk
 from azure.storage.blob import BlobServiceClient
 
-def write_file_manifest(blob_service_client, blob_container_name, output_dir='', manifest_file='manifest.txt'):
+def write_file_manifest(blob_service_client, blob_container_name, blob_path_prefix, output_dir='', manifest_file='manifest.txt'):
     load_dotenv()
     # Load output_dir from .env if not passed as an argument
     if not output_dir:
@@ -16,11 +16,18 @@ def write_file_manifest(blob_service_client, blob_container_name, output_dir='',
     with open(manifest_file_path, 'w') as file:
         container_client = blob_service_client.get_container_client(blob_container_name)
         
-        # List all blobs in the container
-        blobs = container_client.list_blobs()
+        # List blobs with the specified prefix
+        blobs = container_client.list_blobs(name_starts_with=blob_path_prefix)
         for blob in blobs:
-            # Write the full blob name to the manifest file
-            file.write(blob.name + '\n')
+            # Remove the prefix directly to ensure no character is mistakenly dropped
+            partial_name = blob.name.replace(blob_path_prefix, '', 1)
+            # Extract just the file name, assuming it's the portion after the last '/'
+            file_name = partial_name.split('/')[-1]
+            
+            # Optional: Remove a specific suffix if needed, e.g., '.output.json'
+            file_name = file_name.replace('.output.json', '')
+            
+            file.write(file_name + '\n')
 
     print(f"Manifest file written to: {manifest_file_path}")
 
