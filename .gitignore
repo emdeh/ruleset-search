@@ -7,7 +7,7 @@ data/input/
 data/output/
 
 # Exclude actual rulesets, but not the example
-**/rulesets.json
+**/rulesets*
 
 # Exclude IDE-specific files and directories
 .vscode/

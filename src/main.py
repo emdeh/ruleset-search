@@ -35,7 +35,7 @@ def main():
     # Prepare the CSV file for output
     with open(app_settings.output_csv_path, 'w', newline='', encoding='utf-8') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Surrounding context (Extracts the the sentences immediately before and after where the condition was triggered)', 'Start', 'End', 'Path to File'])
+        csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Surrounding context (Extracts the the sentences immediately before and after where the condition was triggered)'])
 
         
 
@@ -68,9 +68,6 @@ def main():
                         match["rule_set_name"],
                         match["condition"],
                         surrounding_context_str,  # Concatenated and stripped context
-                        match["start"],
-                        match["end"],
-                        clickable_path
                     ])
                     print(f"Processed {blob_name} successfully.")
             else:
