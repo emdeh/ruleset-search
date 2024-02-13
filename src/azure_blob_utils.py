@@ -14,10 +14,10 @@ def read_blob_content(client, container_name, blob_name):
     try:
         blob_client = client.get_blob_client(container=container_name, blob=blob_name)
         blob_content = blob_client.download_blob().readall()
-        # Decode the blob content assuming it is text
         text_content = blob_content.decode('utf-8')
-        # Convert JSON content to a Python dictionary
-        return json.loads(text_content)
+        print(f"Decoded text content for {blob_name}: {text_content[:100]}")
+        content = json.loads(text_content)
+        return content
     except Exception as e:
-        print(f"Failed to read blob content: {e}")
+        print(f"Failed to read blob content for {blob_name}: {e}")
         return None

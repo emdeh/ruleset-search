@@ -15,7 +15,6 @@ original_path = os.getenv('ORIGINAL_PATH')
 # Load configuration settings, such as Azure connection strings and container name
 
 blob_account_url = os.getenv('ACCOUNT_URL')
-blob_container_name = os.getenv('CONTIANER_NAME')
+blob_container_name = os.getenv('CONTAINER_NAME')
 blob_credential = os.getenv('SAS_TOKEN')
-blob_service_client = os.getenv('BLOB_SERVICE_CLIENT')
 blob_path_prefix = os.getenv('BLOB_PATH_PREFIX')

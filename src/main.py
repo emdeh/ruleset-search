@@ -3,6 +3,7 @@ import sys
 import os
 from text_processing import write_file_manifest, process_text, load_rulesets
 from azure_blob_utils import get_blob_service_client, list_blobs, read_blob_content
+from azure.storage.blob import BlobServiceClient
 import csv
 import json # for testing
 
@@ -21,6 +22,7 @@ def main():
 
     # Initialize the Azure Blob Service Client
     blob_service_client = get_blob_service_client(app_settings.blob_account_url, app_settings.blob_credential)
+    print(f"Successfully connected to the Azure Blob Storage account: {app_settings.blob_account_url} with service client: {blob_service_client}")
 
     # Load the rulesets from a JSON file
     rulesets = load_rulesets(app_settings.ruleset_path)   
@@ -30,7 +32,43 @@ def main():
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(['File Name', 'Triggered Rule', 'Triggered Condition', 'Path to File' 'Start', 'End'])
 
-        '''
+        # Define the path prefix for the subfolder structure
+        path_prefix = app_settings.blob_path_prefix
+        print(f"Processing blobs in the container with path prefix: {path_prefix}")
+
+        # Process each blob in the container
+        print(f"Listing blobs in container: {app_settings.blob_container_name}")
+        for blob in list_blobs(blob_service_client, app_settings.blob_container_name, path_prefix):
+            print(f"Found blob: {blob.name}")
+            blob_name = blob.name
+            content = read_blob_content(blob_service_client, app_settings.blob_container_name, blob_name)
+    
+            if 'text_content' in content and content['text_content'].strip():
+            # 'strip()' removes leading/trailing whitespace, making this check fail for empty or whitespace-only content
+                text_content = content['text_content']
+                print(f"Processing blob: {blob_name} with text content length: {len(text_content)}")
+            
+                # Process the text content
+                clickable_path = app_settings.original_path + blob_name
+                extracted_info = process_text(text_content, rulesets)
+                for match in extracted_info:
+                    csvwriter.writerow([
+                        blob_name,
+                        match["rule_set_name"],
+                        match["condition"],
+                        clickable_path,
+                        match["start"],
+                        match["end"]
+                    ])
+                    print(f"Processed {blob_name} successfully.")
+            else:
+                # Handle blobs with empty or whitespace-only 'text_content'
+                print(f"Skipping blob: {blob_name} due to empty 'text_content'")
+
+if __name__ == "__main__":
+    main()
+
+'''
         # FOR TESTING #
         # Process the local JSON file
         for file_name in app_settings.input_files:
@@ -51,31 +89,5 @@ def main():
                         match["start"],
                         match["end"]
                     ])
-                print(f"Processed {file_name} successfully.")'''
-        
-        # Define the path prefix for the subfolder structure
-        path_prefix = app_settings.blob_path_prefix
-
-        # Process each blob in the container
-        for blob in list_blobs(app_settings.blob_service_client, app_settings.blob_container_name, path_prefix):
-            blob_name = blob.name
-            content = read_blob_content(app_settings.blob_service_client, app_settings.blob_container_name, blob_name)
-
-            text_content = content.get('text_content', '')
-
-            # Process the text content
-            clickable_path = app_settings.original_path + blob_name
-            extracted_info = process_text(text_content, rulesets)
-            for match in extracted_info:
-                csvwriter.writerow([
-                    blob_name,
-                    match["rule_set_name"],
-                    match["condition"],
-                    clickable_path,
-                    match["start"],
-                    match["end"]
-                    ])
-                print(f"Processed {blob_name} successfully.")
-
-if __name__ == "__main__":
-    main()
+                print(f"Processed {file_name} successfully.")
+'''
