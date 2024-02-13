@@ -5,16 +5,25 @@ import os
 from dotenv import load_dotenv
 import os
 import nltk
+from azure.storage.blob import BlobServiceClient
 
-def write_file_manifest(input_dir, output_dir, manifest_file='manifest.txt'):
+def write_file_manifest(blob_service_client, blob_container_name, path_prefix='', output_dir='', manifest_file='manifest.txt'):
     load_dotenv()
-    input_dir = os.getenv('INPUT_DIR')
-    output_dir = os.getenv('OUTPUT_DIR')
-    manifest_file = os.path.join(output_dir, 'manifest.txt')
+    # If output_dir is not passed as an argument, it will be loaded from .env
+    if not output_dir:
+        output_dir = os.getenv('OUTPUT_DIR')
+    manifest_file_path = os.path.join(output_dir, manifest_file)
 
-    with open(manifest_file, 'w') as file:
-        for filename in os.listdir(input_dir):
-            file.write(filename + '\n')
+    with open(manifest_file_path, 'w') as file:  # Use manifest_file_path here
+        container_client = blob_service_client.get_container_client(blob_container_name)
+        
+        # List blobs with the specified prefix (if any)
+        blobs = container_client.list_blobs(name_starts_with=path_prefix)
+        for blob in blobs:
+            # Write the blob name to the manifest file
+            file.write(blob.name + '\n')
+
+    print(f"Manifest file written to: {manifest_file_path}")
 
 # Example usage within main.py
 if __name__ == "__main__":

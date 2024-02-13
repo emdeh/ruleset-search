@@ -1,5 +1,5 @@
  # Define global settings here, such as Azure Storage connection strings (use environment variables for actual values to keep them secure).
-
+# Responsible for loading the environment variables from your .env file and making them available as Python variables in your application
 import os
 from dotenv import load_dotenv
 
@@ -14,5 +14,7 @@ original_path = os.getenv('ORIGINAL_PATH')
 
 # Load configuration settings, such as Azure connection strings and container name
 
-# connection_string = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-# container_name = os.getenv('AZURE_STORAGE_CONTAINER_NAME')
+blob_account_url = os.getenv('ACCOUNT_URL')
+blob_container_name = os.getenv('CONTAINER_NAME')
+blob_credential = os.getenv('SAS_TOKEN')
+blob_path_prefix = os.getenv('BLOB_PATH_PREFIX')
