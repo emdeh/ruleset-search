@@ -17,12 +17,13 @@ sys.path.insert(0, project_root)
 from config import app_settings
 
 def main():
-    # Create manifest of input files
-    write_file_manifest(app_settings.input_dir, app_settings.output_dir)
-
+    
     # Initialize the Azure Blob Service Client
     blob_service_client = get_blob_service_client(app_settings.blob_account_url, app_settings.blob_credential)
     print(f"Successfully connected to the Azure Blob Storage account: {app_settings.blob_account_url} with service client: {blob_service_client}")
+
+    # Create manifest of input files
+    write_file_manifest(blob_service_client, app_settings.blob_container_name, app_settings.blob_path_prefix, app_settings.output_dir, manifest_file='manifest.txt')
 
     # Load the rulesets from a JSON file
     rulesets = load_rulesets(app_settings.ruleset_path)   
