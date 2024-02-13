@@ -3,24 +3,23 @@ from flashtext import KeywordProcessor
 import json
 import os
 from dotenv import load_dotenv
-import os
 import nltk
 from azure.storage.blob import BlobServiceClient
 
-def write_file_manifest(blob_service_client, blob_container_name, path_prefix='', output_dir='', manifest_file='manifest.txt'):
+def write_file_manifest(blob_service_client, blob_container_name, output_dir='', manifest_file='manifest.txt'):
     load_dotenv()
-    # If output_dir is not passed as an argument, it will be loaded from .env
+    # Load output_dir from .env if not passed as an argument
     if not output_dir:
         output_dir = os.getenv('OUTPUT_DIR')
     manifest_file_path = os.path.join(output_dir, manifest_file)
 
-    with open(manifest_file_path, 'w') as file:  # Use manifest_file_path here
+    with open(manifest_file_path, 'w') as file:
         container_client = blob_service_client.get_container_client(blob_container_name)
         
-        # List blobs with the specified prefix (if any)
-        blobs = container_client.list_blobs(name_starts_with=path_prefix)
+        # List all blobs in the container
+        blobs = container_client.list_blobs()
         for blob in blobs:
-            # Write the blob name to the manifest file
+            # Write the full blob name to the manifest file
             file.write(blob.name + '\n')
 
     print(f"Manifest file written to: {manifest_file_path}")
